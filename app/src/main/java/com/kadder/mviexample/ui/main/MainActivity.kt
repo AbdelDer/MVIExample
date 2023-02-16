@@ -1,4 +1,4 @@
-package com.kadder.mviexample
+package com.kadder.mviexample.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

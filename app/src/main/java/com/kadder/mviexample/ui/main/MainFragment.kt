@@ -1,4 +1,4 @@
-package com.kadder.mviexample
+package com.kadder.mviexample.ui.main
 
 import android.os.Bundle
 import android.view.*
