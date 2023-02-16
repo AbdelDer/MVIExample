@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.kadder.mviexample.model.Photo
+import com.kadder.mviexample.model.User
 import com.kadder.mviexample.ui.main.state.MainStateEvent
 import com.kadder.mviexample.ui.main.state.MainViewState
 import com.kadder.mviexample.util.AbsentLiveData
@@ -28,4 +30,25 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun setPhotosData(photos: List<Photo>) {
+        val update = getCurrentViewStateOrNew()
+        update.photos = photos
+        _viewState.value = update
+    }
+
+    fun setUserData(user: User) {
+        val update = getCurrentViewStateOrNew()
+        update.user = user
+        _viewState.value = update
+    }
+
+    private fun getCurrentViewStateOrNew(): MainViewState {
+        return viewState.value ?: MainViewState()
+    }
+
+    fun setStateEvent(event: MainStateEvent) {
+        _stateEvent.value = event
+    }
+
 }
