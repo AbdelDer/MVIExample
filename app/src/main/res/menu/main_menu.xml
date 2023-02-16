@@ -6,7 +6,7 @@
         android:title="get user"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_get_blogs"
-        android:title="get blogs"
+        android:id="@+id/action_get_photos"
+        android:title="get photos"
         app:showAsAction="never" />
 </menu>
