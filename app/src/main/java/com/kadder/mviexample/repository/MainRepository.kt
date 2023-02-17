@@ -10,7 +10,7 @@ import com.kadder.mviexample.util.DataState
 import com.kadder.mviexample.util.GenericApiResponse
 
 object MainRepository {
-    fun getBlogPosts(): LiveData<DataState<MainViewState>> {
+    fun getPhotos(): LiveData<DataState<MainViewState>> {
         return object : NetworkBoundResource<List<Photo>, MainViewState>() {
 
             override fun handleApiSuccessResponse(response: ApiSuccessResponse<List<Photo>>) {
