@@ -1,10 +1,12 @@
 package com.kadder.mviexample.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.kadder.mviexample.ui.DataStateListener
 import com.kadder.mviexample.ui.main.state.MainStateEvent.GetPhotosEvent
 import com.kadder.mviexample.ui.main.state.MainStateEvent.GetUserEvent
 import com.kader.mviexample.R
@@ -12,6 +14,7 @@ import com.kader.mviexample.R
 class MainFragment : Fragment() {
 
     lateinit var viewModel: MainViewModel
+    lateinit var dataStateListener: DataStateListener
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,13 +37,20 @@ class MainFragment : Fragment() {
 
     fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            println("DEBUG: DataState: $dataState")
-            dataState.data?.let { mainViewState ->
-                mainViewState.photos?.let { photos ->
-                    viewModel.setPhotosData(photos)
-                }
-                mainViewState.user?.let { user ->
-                    viewModel.setUserData(user)
+
+            //Handling loading and error message
+            dataStateListener.onDataStateChange(dataState)
+
+            dataState.data?.let { event ->
+                event.getContentIfNotHandled()?.let { mainViewState ->
+
+                    println("DEBUG: DataState: $dataState")
+                    mainViewState.photos?.let { photos ->
+                        viewModel.setPhotosData(photos)
+                    }
+                    mainViewState.user?.let { user ->
+                        viewModel.setUserData(user)
+                    }
                 }
             }
         })
@@ -78,5 +88,14 @@ class MainFragment : Fragment() {
 
     private fun triggerGetUSerEvent() {
         viewModel.setStateEvent(GetUserEvent("1"))
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            dataStateListener = context as DataStateListener
+        } catch (ex: ClassCastException) {
+            println("DEBUG: $context  must implement DataState listener")
+        }
     }
 }
