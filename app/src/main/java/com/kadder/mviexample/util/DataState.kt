@@ -1,18 +1,17 @@
 package com.kadder.mviexample.util
 
 data class DataState<T>(
-    var message: Event<String>? = null,
+    var message: String? = null,
     var loading: Boolean = false,
-    var data: Event<T>? = null
-)
-{
+    var data: T? = null
+) {
     companion object {
 
         fun <T> error(
             message: String
         ): DataState<T> {
             return DataState(
-                message = Event(message),
+                message = message,
                 loading = false,
                 data = null
             )
@@ -33,9 +32,9 @@ data class DataState<T>(
             data: T? = null
         ): DataState<T> {
             return DataState(
-                message = Event.messageEvent(message),
+                message = message,
                 loading = false,
-                data = Event.dataEvent(data)
+                data = data
             )
         }
     }
