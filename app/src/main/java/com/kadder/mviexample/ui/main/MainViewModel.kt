@@ -10,13 +10,14 @@ import com.kadder.mviexample.repository.MainRepository
 import com.kadder.mviexample.ui.main.state.MainStateEvent
 import com.kadder.mviexample.ui.main.state.MainViewState
 import com.kadder.mviexample.util.AbsentLiveData
+import com.kadder.mviexample.util.DataState
 
 class MainViewModel : ViewModel() {
 
     private val _stateEvent: MutableLiveData<MainStateEvent> = MutableLiveData()
     private val _viewState: MutableLiveData<MainViewState> = MutableLiveData()
     val viewState: LiveData<MainViewState> get() = _viewState
-    val dataState: LiveData<MainViewState> = Transformations.switchMap(_stateEvent) { stateEvent ->
+    val dataState: LiveData<DataState<MainViewState>> = Transformations.switchMap(_stateEvent) { stateEvent ->
         stateEvent?.let {
             when (stateEvent) {
                 is MainStateEvent.GetPhotosEvent -> {

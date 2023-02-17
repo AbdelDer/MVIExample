@@ -7,24 +7,30 @@ import com.kadder.mviexample.ui.main.state.MainViewState
 import com.kadder.mviexample.util.ApiEmptyResponse
 import com.kadder.mviexample.util.ApiErrorResponse
 import com.kadder.mviexample.util.ApiSuccessResponse
+import com.kadder.mviexample.util.DataState
 
 object MainRepository {
-    fun getPhotos(): LiveData<MainViewState> {
+    fun getPhotos(): LiveData<DataState<MainViewState>> {
         return Transformations.switchMap(MVIRetrofitBuilder.apiService.getPhotos()) { apiResponse ->
-            object : LiveData<MainViewState>() {
+            object : LiveData<DataState<MainViewState>>() {
                 override fun onActive() {
                     super.onActive()
                     when (apiResponse) {
                         is ApiSuccessResponse -> {
-                            value = MainViewState(
-                                photos = apiResponse.body
+                            value = DataState.data(
+                                message = null,
+                                data = MainViewState(
+                                    photos = apiResponse.body
+                                )
                             )
                         }
                         is ApiErrorResponse -> {
-                            value = MainViewState() //handle error
+                            value =
+                                DataState.error(message = apiResponse.errorMessage)
                         }
                         is ApiEmptyResponse -> {
-                            value = MainViewState() //handle empty error
+                            value =
+                                DataState.error(message = "HTTP 204. Returned NOTHING!")
                         }
                     }
                 }
@@ -32,22 +38,27 @@ object MainRepository {
         }
     }
 
-    fun getUser(userId: String): LiveData<MainViewState> {
+    fun getUser(userId: String): LiveData<DataState<MainViewState>> {
         return Transformations.switchMap(MVIRetrofitBuilder.apiService.getUser(userId)) { apiResponse ->
-            object : LiveData<MainViewState>() {
+            object : LiveData<DataState<MainViewState>>() {
                 override fun onActive() {
                     super.onActive()
                     when (apiResponse) {
                         is ApiSuccessResponse -> {
-                            value = MainViewState(
-                                user = apiResponse.body
+                            value = DataState.data(
+                                message = null,
+                                data = MainViewState(
+                                    user = apiResponse.body
+                                )
                             )
                         }
                         is ApiErrorResponse -> {
-                            value = MainViewState() //handle error
+                            value =
+                                DataState.error(message = apiResponse.errorMessage)
                         }
                         is ApiEmptyResponse -> {
-                            value = MainViewState() //handle empty error
+                            value =
+                                DataState.error(message = "HTTP 204. Returned NOTHING!")
                         }
                     }
                 }
