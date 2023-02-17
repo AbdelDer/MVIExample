@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.kadder.mviexample.model.Photo
 import com.kadder.mviexample.model.User
+import com.kadder.mviexample.repository.MainRepository
 import com.kadder.mviexample.ui.main.state.MainStateEvent
 import com.kadder.mviexample.ui.main.state.MainViewState
 import com.kadder.mviexample.util.AbsentLiveData
@@ -19,10 +20,10 @@ class MainViewModel : ViewModel() {
         stateEvent?.let {
             when (stateEvent) {
                 is MainStateEvent.GetPhotosEvent -> {
-                    AbsentLiveData.create<MainViewState>()
+                    MainRepository.getPhotos()
                 }
                 is MainStateEvent.GetUserEvent -> {
-                    AbsentLiveData.create()
+                    MainRepository.getUser(stateEvent.userId)
                 }
                 is MainStateEvent.None -> {
                     AbsentLiveData.create()
