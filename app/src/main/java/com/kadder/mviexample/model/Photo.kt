@@ -14,6 +14,6 @@ data class Photo(
     @SerializedName("url") val url: String?
 ) {
     override fun toString(): String {
-        return super.toString()
+        return "Photo(id=$id, title=$title, url=$url)"
     }
 }

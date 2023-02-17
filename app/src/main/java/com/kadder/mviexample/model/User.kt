@@ -14,6 +14,6 @@ data class User(
     @SerializedName("image") val image: String = "https://rb.gy/ehjiio"
 ){
     override fun toString(): String {
-        return super.toString()
+        return "User(email=$email, username=$username, image=$image)"
     }
 }
