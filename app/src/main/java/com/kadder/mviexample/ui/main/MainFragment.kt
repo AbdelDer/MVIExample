@@ -6,15 +6,25 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.kadder.mviexample.model.Photo
 import com.kadder.mviexample.ui.DataStateListener
 import com.kadder.mviexample.ui.main.state.MainStateEvent.GetPhotosEvent
 import com.kadder.mviexample.ui.main.state.MainStateEvent.GetUserEvent
+import com.kadder.mviexample.util.TopSpacingItemDecoration
 import com.kader.mviexample.R
+import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), MainRecyclerAdapter.Interaction{
 
     lateinit var viewModel: MainViewModel
     lateinit var dataStateListener: DataStateListener
+    lateinit var mainRecyclerAdapter: MainRecyclerAdapter
+
+    override fun onItemSelected(position: Int, item: Photo) {
+        println("DEBUG: CLICKED ${position}")
+        println("DEBUG: CLICKED ${item}")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,8 +41,18 @@ class MainFragment : Fragment() {
         viewModel = activity?.run {
             ViewModelProvider(this).get(MainViewModel::class.java)
         } ?: throw Exception("Invalid Activity")
-
+        initRecyclerView()
         subscribeObservers()
+    }
+
+    private fun initRecyclerView(){
+        recycler_view.apply {
+            layoutManager = LinearLayoutManager(this@MainFragment.context)
+            val topSpacingDecorator = TopSpacingItemDecoration(30)
+            addItemDecoration(topSpacingDecorator)
+            mainRecyclerAdapter = MainRecyclerAdapter(this@MainFragment)
+            adapter = mainRecyclerAdapter
+        }
     }
 
     fun subscribeObservers() {
@@ -51,13 +71,14 @@ class MainFragment : Fragment() {
                     mainViewState.user?.let { user ->
                         viewModel.setUserData(user)
                     }
-                }
+                } 
             }
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             viewState.photos?.let {
                 println("DEBUG: setting photos to recyclerView: $it")
+                mainRecyclerAdapter.submitList(it)
             }
             viewState.user?.let {
                 println("DEBUG: setting user  date: $it")
